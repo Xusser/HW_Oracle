@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.OleDb;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -166,7 +168,7 @@ namespace HW_Oracle
             button_insert.Enabled = false;
             SetStatus("DOING", false);
 
-            DataForm df = new DataForm(null, null, null, null, null, textBox_DATABASE.Text + '.' + textBox_TABLE.Text,0);
+            DataForm df = new DataForm(null, null, null, null, null, textBox_DATABASE.Text + '.' + textBox_TABLE.Text, 0);
 
             switch (df.ShowDialog(this))
             {
@@ -182,6 +184,73 @@ namespace HW_Oracle
             }
             button_insert.Enabled = true;
             re_dataGridView();
+        }
+
+        private void button_excel2db_Click(object sender, EventArgs e)
+        {
+            button_excel2db.Enabled = false;
+            SetStatus("DOING", false);
+            string filePath = null;
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "xlsx文件|*.xlsx|xls文件|*.xls";
+                ofd.RestoreDirectory = true;
+                ofd.FilterIndex = 0;
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    filePath = ofd.FileName;
+                    MessageBox.Show(filePath);
+                }
+                else
+                {
+                    SetStatus("CANCELED", false);
+                    return;
+                }
+            }
+
+
+            DataTable dtResult = null;
+            int totalSheet = 0; //No of sheets on excel file  
+            using (OleDbConnection objConn = new OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES;IMEX=1;';"))
+            {
+                objConn.Open();
+                OleDbCommand cmd = new OleDbCommand();
+                OleDbDataAdapter oleda = new OleDbDataAdapter();
+                DataSet ds = new DataSet();
+                DataTable dt = objConn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                string sheetName = string.Empty;
+                if (dt != null)
+                {
+                    var tempDataTable = (from dataRow in dt.AsEnumerable()
+                                         where !dataRow["TABLE_NAME"].ToString().Contains("FilterDatabase")
+                                         select dataRow).CopyToDataTable();
+                    dt = tempDataTable;
+                    totalSheet = dt.Rows.Count;
+                    sheetName = dt.Rows[0]["TABLE_NAME"].ToString();
+                }
+                cmd.Connection = objConn;
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "SELECT * FROM [" + sheetName + "]";
+                oleda = new OleDbDataAdapter(cmd);
+                oleda.Fill(ds, "excelData");
+                dtResult = ds.Tables["excelData"];
+                objConn.Close();
+            }
+            string SQL = null;
+            int SuccessCount = 0;
+            foreach (DataRow row in dtResult.Rows)
+            {
+                SQL = string.Format(@"INSERT INTO {0} (SNO,SNAME,SSEX,SBIRTHDAY,TC) values ('{1}','{2}','{3}',to_date('{4}','YYYY/MM/DD'),'{5}')", textBox_DATABASE.Text + '.' + textBox_TABLE.Text, row["SNO"].ToString(), row["SNAME"].ToString(), row["SSEX"].ToString(), row["SBIRTHDAY"].ToString(), row["TC"].ToString());
+                if (OracleHelper.ExecuteSQL(SQL) > 0)
+                {
+                    SuccessCount++;
+                }
+            }
+
+            MessageBox.Show("Insert done\ntimes = " + SuccessCount);
+            
+            SetStatus("OK", true);
+            button_excel2db.Enabled = true;
         }
     }
 }

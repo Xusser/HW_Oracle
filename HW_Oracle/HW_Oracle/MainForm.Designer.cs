@@ -32,6 +32,7 @@
             this.tableLayoutPanel_Buttons = new System.Windows.Forms.TableLayoutPanel();
             this.button_insert = new System.Windows.Forms.Button();
             this.button_rf_dgv = new System.Windows.Forms.Button();
+            this.button_excel2db = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.textBox_DATABASE = new System.Windows.Forms.TextBox();
@@ -70,6 +71,7 @@
             this.tableLayoutPanel_Buttons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel_Buttons.Controls.Add(this.button_insert, 0, 0);
             this.tableLayoutPanel_Buttons.Controls.Add(this.button_rf_dgv, 3, 0);
+            this.tableLayoutPanel_Buttons.Controls.Add(this.button_excel2db, 1, 0);
             this.tableLayoutPanel_Buttons.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel_Buttons.Location = new System.Drawing.Point(16, 318);
             this.tableLayoutPanel_Buttons.Margin = new System.Windows.Forms.Padding(8);
@@ -84,10 +86,10 @@
             // 
             this.button_insert.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button_insert.Font = new System.Drawing.Font("Arial", 15.75F);
-            this.button_insert.Location = new System.Drawing.Point(8, 8);
-            this.button_insert.Margin = new System.Windows.Forms.Padding(8);
+            this.button_insert.Location = new System.Drawing.Point(6, 6);
+            this.button_insert.Margin = new System.Windows.Forms.Padding(6);
             this.button_insert.Name = "button_insert";
-            this.button_insert.Size = new System.Drawing.Size(187, 74);
+            this.button_insert.Size = new System.Drawing.Size(191, 78);
             this.button_insert.TabIndex = 0;
             this.button_insert.Text = "INSERT";
             this.button_insert.UseVisualStyleBackColor = true;
@@ -97,14 +99,27 @@
             // 
             this.button_rf_dgv.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button_rf_dgv.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button_rf_dgv.Location = new System.Drawing.Point(617, 8);
-            this.button_rf_dgv.Margin = new System.Windows.Forms.Padding(8);
+            this.button_rf_dgv.Location = new System.Drawing.Point(615, 6);
+            this.button_rf_dgv.Margin = new System.Windows.Forms.Padding(6);
             this.button_rf_dgv.Name = "button_rf_dgv";
-            this.button_rf_dgv.Size = new System.Drawing.Size(187, 74);
+            this.button_rf_dgv.Size = new System.Drawing.Size(191, 78);
             this.button_rf_dgv.TabIndex = 3;
             this.button_rf_dgv.Text = "REFRESH\r\nDATAGRIDVIEW";
             this.button_rf_dgv.UseVisualStyleBackColor = true;
             this.button_rf_dgv.Click += new System.EventHandler(this.Button_Re_DataGridView_Click);
+            // 
+            // button_excel2db
+            // 
+            this.button_excel2db.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.button_excel2db.Font = new System.Drawing.Font("Arial", 15.75F);
+            this.button_excel2db.Location = new System.Drawing.Point(209, 6);
+            this.button_excel2db.Margin = new System.Windows.Forms.Padding(6);
+            this.button_excel2db.Name = "button_excel2db";
+            this.button_excel2db.Size = new System.Drawing.Size(191, 78);
+            this.button_excel2db.TabIndex = 4;
+            this.button_excel2db.Text = "EXCEL TO DB";
+            this.button_excel2db.UseVisualStyleBackColor = true;
+            this.button_excel2db.Click += new System.EventHandler(this.button_excel2db_Click);
             // 
             // dataGridView
             // 
@@ -116,6 +131,7 @@
             this.dataGridView.Location = new System.Drawing.Point(16, 16);
             this.dataGridView.Margin = new System.Windows.Forms.Padding(8);
             this.dataGridView.Name = "dataGridView";
+            this.dataGridView.RowHeadersWidth = 51;
             this.dataGridView.RowTemplate.Height = 23;
             this.dataGridView.Size = new System.Drawing.Size(812, 286);
             this.dataGridView.TabIndex = 1;
@@ -201,6 +217,7 @@
         private System.Windows.Forms.TextBox textBox_DATABASE;
         private System.Windows.Forms.TextBox textBox_TABLE;
         private System.Windows.Forms.Label statuslabel;
+        private System.Windows.Forms.Button button_excel2db;
     }
 }
 

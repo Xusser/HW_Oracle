@@ -30,8 +30,9 @@
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.button_cancel = new System.Windows.Forms.Button();
+            this.button_trans_insert = new System.Windows.Forms.Button();
             this.button_confirm = new System.Windows.Forms.Button();
+            this.button_insert_200 = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.textbox_tc = new System.Windows.Forms.TextBox();
             this.combobox_ssex = new System.Windows.Forms.ComboBox();
@@ -66,44 +67,58 @@
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.button_cancel, 0, 0);
+            this.tableLayoutPanel2.ColumnCount = 3;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel2.Controls.Add(this.button_trans_insert, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.button_confirm, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.button_insert_200, 2, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(14, 282);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(6);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 55F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(356, 55);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
-            // button_cancel
+            // button_trans_insert
             // 
-            this.button_cancel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button_cancel.Location = new System.Drawing.Point(6, 6);
-            this.button_cancel.Margin = new System.Windows.Forms.Padding(6);
-            this.button_cancel.Name = "button_cancel";
-            this.button_cancel.Size = new System.Drawing.Size(166, 43);
-            this.button_cancel.TabIndex = 6;
-            this.button_cancel.Text = "CANCEL";
-            this.button_cancel.UseVisualStyleBackColor = true;
-            this.button_cancel.Click += new System.EventHandler(this.Button_cancel_Click);
+            this.button_trans_insert.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.button_trans_insert.Location = new System.Drawing.Point(6, 6);
+            this.button_trans_insert.Margin = new System.Windows.Forms.Padding(6);
+            this.button_trans_insert.Name = "button_trans_insert";
+            this.button_trans_insert.Size = new System.Drawing.Size(106, 43);
+            this.button_trans_insert.TabIndex = 6;
+            this.button_trans_insert.Text = "TRANS";
+            this.button_trans_insert.UseVisualStyleBackColor = true;
+            this.button_trans_insert.Click += new System.EventHandler(this.button_trans_insert_Click);
             // 
             // button_confirm
             // 
             this.button_confirm.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button_confirm.Location = new System.Drawing.Point(184, 6);
+            this.button_confirm.Location = new System.Drawing.Point(124, 6);
             this.button_confirm.Margin = new System.Windows.Forms.Padding(6);
             this.button_confirm.Name = "button_confirm";
-            this.button_confirm.Size = new System.Drawing.Size(166, 43);
+            this.button_confirm.Size = new System.Drawing.Size(106, 43);
             this.button_confirm.TabIndex = 5;
-            this.button_confirm.Text = "CONFIRM";
+            this.button_confirm.Text = "INSERT";
             this.button_confirm.UseVisualStyleBackColor = true;
             this.button_confirm.Click += new System.EventHandler(this.Button_confirm_Click);
+            // 
+            // button_insert_200
+            // 
+            this.button_insert_200.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.button_insert_200.Enabled = false;
+            this.button_insert_200.Location = new System.Drawing.Point(242, 6);
+            this.button_insert_200.Margin = new System.Windows.Forms.Padding(6);
+            this.button_insert_200.Name = "button_insert_200";
+            this.button_insert_200.Size = new System.Drawing.Size(108, 43);
+            this.button_insert_200.TabIndex = 7;
+            this.button_insert_200.Text = "RANDOM INSERT\r\n200";
+            this.button_insert_200.UseVisualStyleBackColor = true;
+            this.button_insert_200.Click += new System.EventHandler(this.button_insert_200_Click);
             // 
             // tableLayoutPanel3
             // 
@@ -258,7 +273,7 @@
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.Button button_cancel;
+        private System.Windows.Forms.Button button_trans_insert;
         private System.Windows.Forms.Button button_confirm;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.TextBox textbox_tc;
@@ -271,5 +286,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.DateTimePicker dtpicker_sbirthday;
+        private System.Windows.Forms.Button button_insert_200;
     }
 }
