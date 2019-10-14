@@ -19,8 +19,16 @@ namespace HW_Oracle
         private DataGridViewButtonColumn btn_mod = null;
         private DataGridViewButtonColumn btn_del = null;
 
+        private static MainForm _mf = null;
+
+        public static MainForm Instance()
+        {
+            return _mf;
+        }
+
         public MainForm()
         {
+            _mf = this;
             InitializeComponent();
         }
 
@@ -38,7 +46,65 @@ namespace HW_Oracle
             sl.Text = "STATUS:\t" + text.Trim();
         }
 
-        private void re_dataGridView()
+        public void re_dataGridView(DataTable dataTable)
+        {
+            button_rf_dgv.Enabled = false;
+            SetStatus("DOING", false);
+
+            if (dt != null)
+            {
+                dt.Clear();
+            }
+            dt = dataTable;
+            if (dt != null)
+            {
+                if (dt.Rows.Count > 0)
+                {
+                    dataGridView.DataSource = dataTable;
+
+                    //追加修改按键
+                    if (btn_mod != null)    //已经存在就删掉原来的按键
+                    {
+                        try
+                        {
+                            dataGridView.Columns.Remove(btn_mod);
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                    
+
+                    //追加删除按键
+                    if (btn_del != null)    //已经存在就删掉原来的按键
+                    {
+                        try
+                        {
+                            dataGridView.Columns.Remove(btn_del);
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                    
+
+                    SetStatus("PREVIEW MODE", true);
+                }
+                else
+                {
+                    SetStatus("ERROR/NO DATA", false);
+                }
+            }
+            else
+            {
+                SetStatus("ERROR", false);
+            }
+            button_rf_dgv.Enabled = true;
+        }
+
+        public void re_dataGridView()
         {
             button_rf_dgv.Enabled = false;
             SetStatus("DOING", false);
@@ -58,7 +124,8 @@ namespace HW_Oracle
                     //追加修改按键
                     if (btn_mod != null)    //已经存在就删掉原来的按键
                     {
-                        dataGridView.Columns.Remove(btn_mod);
+                        try { dataGridView.Columns.Remove(btn_mod); } catch { }
+                        
                     }
                     btn_mod = new DataGridViewButtonColumn();
                     dataGridView.Columns.Add(btn_mod);
@@ -70,7 +137,7 @@ namespace HW_Oracle
                     //追加删除按键
                     if (btn_del != null)    //已经存在就删掉原来的按键
                     {
-                        dataGridView.Columns.Remove(btn_del);
+                        try { dataGridView.Columns.Remove(btn_del); } catch { }
                     }
                     btn_del = new DataGridViewButtonColumn();
                     dataGridView.Columns.Add(btn_del);
@@ -248,7 +315,7 @@ namespace HW_Oracle
             }
 
             MessageBox.Show("Insert done\ntimes = " + SuccessCount);
-            
+
             SetStatus("OK", true);
             button_excel2db.Enabled = true;
         }

@@ -17,6 +17,21 @@ namespace HW_Oracle
         private static string connectionStr = "Data Source=(DESCRIPTION =(ADDRESS_LIST =(ADDRESS = (PROTOCOL = TCP)(HOST = 10.79.3.17)(PORT = 1521)))(CONNECT_DATA =(SID = ORCL)(SERVER = DEDICATED)));User Id=System;Password=123456;";
         private static string prevSelectSQL = null;
 
+
+        private static bool usingTranas = false;
+        private static OracleConnection conn = null;
+
+        public static OracleConnection Conn()
+        {
+            if (conn == null)
+            {
+                conn = new OracleConnection(connectionStr);
+                conn.Open();
+            }
+            return conn;
+        }
+
+
         /// <summary>
         /// 执行SQL语句，返回影响记录数
         /// </summary>
@@ -24,21 +39,58 @@ namespace HW_Oracle
         /// <returns>影响记录数</returns>
         public static int ExecuteSQL(string SQL)
         {
-            using (OracleConnection conn = new OracleConnection(connectionStr))
+            using (OracleCommand cmd = new OracleCommand(SQL, Conn()))
             {
-                using (OracleCommand cmd = new OracleCommand(SQL, conn))
+                try
                 {
+                    int rows = cmd.ExecuteNonQuery();
+                    return rows;
+                }
+                catch (OracleException e)
+                {
+                    MessageBox.Show("执行SQL语句错误!\n\n" + e.ToString(), "Error-ExecuteSQL(SQL)");
+                    return -1;
+                }
+            }
+
+        }
+
+        public static DataTable ExecuteSQL_DataTable_Tran_Preview(ArrayList SQLList)
+        {
+            using (OracleCommand cmd = new OracleCommand())
+            {
+                cmd.Connection = Conn();
+                using (OracleTransaction ot = Conn().BeginTransaction())
+                {
+                    cmd.Transaction = ot;
+
                     try
                     {
-                        conn.Open();
-                        int rows = cmd.ExecuteNonQuery();
-                        return rows;
+                        for (int i = 0; i < SQLList.Count; i++)
+                        {
+                            string SQL = SQLList[i].ToString();
+                            if (!String.IsNullOrEmpty(SQL.Trim()))
+                            {
+                                cmd.CommandText = SQL;
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+                        //ot.Commit();
+                        
                     }
                     catch (OracleException e)
                     {
-                        conn.Close();
-                        MessageBox.Show("执行SQL语句错误!\n\n" + e.ToString(), "Error-ExecuteSQL(SQL)");
-                        return -1;
+                        ot.Rollback();
+                        MessageBox.Show("执行SQL语句错误!\n已回滚\n\n" + e.ToString(), "Error-ExecuteSQL_Trans(SQLList)");
+                        return null;
+                    }
+                    cmd.CommandText = prevSelectSQL;
+                    using (OracleDataReader dr = cmd.ExecuteReader())
+                    {
+                        DataTable dt = new DataTable();
+                        dt.Load(dr);
+                        ot.Rollback();
+                        return dt;
                     }
                 }
             }
@@ -51,40 +103,39 @@ namespace HW_Oracle
         /// <returns></returns>
         public static int ExecuteSQL_Tran(ArrayList SQLList)
         {
-            using (OracleConnection conn = new OracleConnection(connectionStr))
+            //MessageBox.Show(SQLList.Count.ToString());
+            using (OracleCommand cmd = new OracleCommand())
             {
-                conn.Open();
-                using (OracleCommand cmd = new OracleCommand())
+                cmd.Connection = Conn();
+                using (OracleTransaction ot = Conn().BeginTransaction())
                 {
-                    cmd.Connection = conn;
-                    using (OracleTransaction ot = conn.BeginTransaction())
-                    {
-                        cmd.Transaction = ot;
+                    cmd.Transaction = ot;
 
-                        try
+                    try
+                    {
+                        for (int i = 0; i < SQLList.Count; i++)
                         {
-                            for (int i = 0; i < SQLList.Count; i++)
+                            string SQL = SQLList[i].ToString();
+                            //MessageBox.Show(SQL);
+                            if (!String.IsNullOrEmpty(SQL.Trim()))
                             {
-                                string SQL = SQLList[i].ToString();
-                                if (String.IsNullOrEmpty(SQL.Trim()))
-                                {
-                                    cmd.CommandText = SQL;
-                                    cmd.ExecuteNonQuery();
-                                }
+                                
+                                cmd.CommandText = SQL;
+                                cmd.ExecuteNonQuery();
                             }
-                            ot.Commit();
-                            return 1;
                         }
-                        catch (OracleException e)
-                        {
-                            ot.Rollback();
-                            conn.Close();
-                            MessageBox.Show("执行SQL语句错误!\n已回滚\n\n" + e.ToString(), "Error-ExecuteSQL_Trans(SQLList)");
-                            return 0;
-                        }
+                        ot.Commit();
+                        return 1;
+                    }
+                    catch (OracleException e)
+                    {
+                        ot.Rollback();
+                        MessageBox.Show("执行SQL语句错误!\n已回滚\n\n" + e.ToString(), "Error-ExecuteSQL_Trans(SQLList)");
+                        return 0;
                     }
                 }
             }
+
         }
 
         /// <summary>
@@ -94,30 +145,25 @@ namespace HW_Oracle
         /// <returns>对应DataTable或者null(失败)</returns>
         public static DataTable ExecuteSQL_DataTable(string SQL)
         {
-            using (OracleConnection conn = new OracleConnection(connectionStr))
+            using (OracleCommand cmd = new OracleCommand(SQL, Conn()))
             {
-                using (OracleCommand cmd = new OracleCommand(SQL, conn))
+                try
                 {
-                    try
+                    using (OracleDataReader dr = cmd.ExecuteReader())
                     {
-                        conn.Open();
-                        using (OracleDataReader dr = cmd.ExecuteReader())
-                        {
-                            DataTable dt = new DataTable();
-                            dt.Load(dr);
-                            dr.Close();
-                            prevSelectSQL = SQL;
-                            return dt;
-                        }
+                        DataTable dt = new DataTable();
+                        dt.Load(dr);
+                        prevSelectSQL = SQL;
+                        return dt;
                     }
-                    catch (OracleException e)
-                    {
-                        conn.Close();
-                        MessageBox.Show("执行SQL语句错误!\n\n" + e.ToString(), "Error-ExecuteReader(SQL)");
-                        return null;
-                    }
+                }
+                catch (OracleException e)
+                {
+                    MessageBox.Show("执行SQL语句错误!\n\n" + e.ToString(), "Error-ExecuteReader(SQL)");
+                    return null;
                 }
             }
         }
+
     }
 }
